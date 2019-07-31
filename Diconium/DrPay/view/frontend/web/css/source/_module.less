@@ -1,0 +1,94 @@
+// /**
+//  * Copyright © Magento, Inc. All rights reserved.
+//  * See COPYING.txt for license details.
+//  */
+
+
+//
+//  Common
+//  _____________________________________________
+
+
+& when (@media-common = true) {
+   
+	
+	/*  Checkout Payment  */
+	
+	#drpay-creditcard-form {
+		.field {
+			background-color: #fff;
+			padding: 5px 20px;
+			font-size: 16px;
+			border:1px solid #d1d3d4;
+			outline: medium none;
+			vertical-align: baseline;
+			width: 95%;
+			-webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+			box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+			-webkit-transition: border-color ease-in-out .15s,-webkit-box-shadow ease-in-out .15s;
+			-o-transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+			transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+			line-height: normal;
+		}
+		label{
+			color: #333;
+			font-weight: normal;
+		}
+		.form-field{
+			margin-bottom: 15px;
+		 }
+		 .payment-form-inner{
+			margin-bottom: 20px;
+			padding: 15px 0px 5px;
+		 }
+		 .invalid {
+			border: 1px solid red;         
+		 }
+		 .empty {
+			border: 1px solid #d1d3d4;
+		 }
+		 .focus {
+			 border: 1px solid #66afe9;
+			 box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(102,175,233,.6);
+		 }
+		 .complete {
+			border: 1px solid #ccc;
+		 }
+		 .DRGooglePayElement {
+			 width: 100%;
+			 margin-bottom: 10px;
+		 }
+		 .DRApplePayElement {
+			 width: 100%;
+			 margin-bottom: 10px;
+		 }
+		 .payment-button {
+			 margin: 15px 0px;
+			 height: 45px;
+			 overflow: hidden;
+		 }
+		.actions-toolbar > .primary .action.primary{
+			padding: @indent__s 17px;
+		} 
+	 }
+	 .checkout-payment-method{
+	 	.payment-method-content{
+		 	.payment-active{
+		 		margin: 15px 15px 15px 0;
+		 		border-bottom: 1px solid #ccc;
+				padding: 20px 20px 15px 0px;				
+		 	}
+		 	.actions-toolbar{
+		 		.primary{
+		 			margin-right: 10px;
+		 		}
+		 	}
+		 	.payment-method-billing-address{
+	 			padding-top: @indent__s;	
+	 		}
+	 	}
+	 	.checkout-billing-address {
+	 		margin: 0px 20px 20px 0px;	 		
+	 	}
+	 }
+}

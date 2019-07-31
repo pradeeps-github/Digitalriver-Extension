@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
+    <table name="sales_order" resource="default" engine="innodb" comment="">
+        <column xsi:type="varchar" name="dr_order_id" nullable="true" length="25" comment="Dr Order Id"/>
+    </table>
+    <table name="sales_order_grid" resource="default" engine="innodb" comment="">
+        <column xsi:type="varchar" name="dr_order_id" nullable="true" length="25" comment="Dr Order Id"/>
+    </table>
+</schema>

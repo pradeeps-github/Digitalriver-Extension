@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
+    <!--<event name="sales_quote_address_collect_totals_before">
+        <observer name="checkout_cart_apply_address" instance="Diconium\DigitalRiver\Observer\UpdateDrQuote"/>
+    </event>-->
+    <event name="sales_model_service_quote_submit_before">
+        <observer name="sales_model_service_quote_submit_before" instance="Diconium\DigitalRiver\Observer\CreateDrOrder"/>
+    </event>
+</config>

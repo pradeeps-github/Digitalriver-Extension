@@ -1,0 +1,102 @@
+<script type="text/javascript">
+	function drPaypalLoader(){
+		var jsUrl = window.checkoutConfig.payment.drpay_paypal.js_url;
+		var publicKey = window.checkoutConfig.payment.drpay_paypal.public_key;
+		if(jsUrl && publicKey){ //If url and key set in admin
+			var script = document.createElement("script"); //Dynamically append the drpaypaljs
+			script.onload = function () {
+		    //After append js set Your API Key and Start DigitalRiver.js
+		    var drpaypaljs = new DigitalRiver(publicKey);
+			// Create a token or display an error when the form is submitted.
+			var paymentForm = document.getElementById('drpay-paypal-btn');
+				paymentForm.addEventListener('click', function(event) {
+				event.preventDefault();
+				var payload = {};
+				//After submit the creditcard details create the cart
+	            jQuery.ajax({
+					type: 'POST',
+					url: BASE_URL + 'drpay/paypal/savedrquote',
+					showLoader: true, //use for display loader 
+					success: function (response) {
+						console.log(response);
+						if (response.success) {
+							if(response.content.payload){
+								//Update billing address if not updated
+								//jQuery(".checkout-billing-address .action-update").trigger("click");
+								//once cart created get the payment source id
+								var payPalData = response.content.payload;
+								drpaypaljs.createSource(payPalData).then(function(result) {
+								    if (result.error) {
+								        console.log(result.error);
+										//Something went wrong, display the error message to the customer
+										document.getElementById('message').innerHTML ="";
+										document.getElementById('message').innerHTML =result.error;								        
+								    } else {
+								        var source = result.source;
+								        console.log(source);
+        						        window.checkoutConfig.payment.drpay_paypal.redirect_url = source.redirect.redirectUrl;
+        						        continuePaypalOrder();
+								        //send source to back end
+								       // sendToBackend(source);
+								    }
+								});
+							}
+						}else{
+							//Show Error Message
+							console.log(response.content.error);
+						}
+					},
+				});	
+			});			    
+		};
+		script.src = jsUrl;
+		document.getElementsByTagName('head')[0].appendChild(script);
+		}
+	}
+
+	function continuePaypalOrder()
+	{
+		require(["jquery"], function ($) {		
+			var title = "<div class='title'>"+$(".payment-methods .payment-group .payment-method._active .payment-method-title .label span").html()+"</div>";
+			var editlink = "<a class='payment-edit' href='javascript:void(0)' id='payment-edit-paypal' onclick='displayPaypalForm()'>Edit</a>";
+			$("#payment-data_paypal").html(title+editlink);						
+			$("#payment-data_paypal").css("display","block");
+			$("#payment-data_paypal").addClass('payment-active');
+			$(".paypal-btn-first").css("display","none");
+			$(".paypal-btn-second").css("display","block");
+			$(".paypal-btn-second .checkout").css("display","block");
+			$(".payment-methods .payment-group .step-title").css("display","none");
+			$(".payment-method._active .payment-method-content .payment-method-note").css("display","none");
+			$(".payment-methods .payment-group .payment-method .payment-method-title").css("display","none");
+			$(".payment-methods .payment-group .payment-method .details").css("display","none");
+			$(".payment-methods .payment-group .payment-method .payment-logos").css("display","none");
+			$(".payment-methods .payment-group .payment-method .payment-icon").css("display","none");
+			$(".payment-methods .payment-group .payment-method .payment-method-instruction").css("display","none");
+			$("#payframe").css("display","none");
+			$('.checkout-tabs .nav-pills li').removeClass('active');
+			$('.checkout-tabs .nav-pills li:nth-child(2)').addClass('active');
+			$('.step-content').css('background','#e6e6e6');
+			$('.payment-method-content').css('margin-bottom','50px');
+		});		
+	}	
+	function displayPaypalForm(){
+		jQuery(".payment-methods .payment-group .step-title").css("display","block");
+		jQuery(".payment-methods .payment-group .payment-method .payment-method-title").css("display","block");
+		jQuery(".payment-methods .payment-group .payment-method .details").css("display","inline-block");
+		jQuery(".payment-methods .payment-group .payment-method .payment-logos").css("display","inline-block");
+		jQuery(".payment-methods .payment-group .payment-method .payment-icon").css("display","inline-block");
+		jQuery("#drpay-paypal-form").css("display","block");
+		jQuery("#payment-data_paypal").css("display","none");
+		jQuery("#payment-data_paypal").removeClass('payment-active');
+		jQuery(".payment-methods .payment-group .payment-method .payment-method-instruction").css("display","block");
+		 jQuery(".payment-methods .payment-group .payment-method .payment-method-content .checkout").css("display","block");
+		jQuery(".payment-methods .payment-group .payment-method .paypal-btn-first").css("display","block");
+		 jQuery(".payment-methods .payment-group .payment-method .paypal-btn-first .checkout").css("display","block");
+		jQuery('.checkout-tabs .nav-pills li').removeClass('active');
+		jQuery('.checkout-tabs .nav-pills li:nth-child(1)').addClass('active');
+		jQuery('.payment-method-content').css('margin-bottom','10px');
+		jQuery(".payment-methods .payment-group .payment-method .checkout").css("display","none");
+		jQuery(".payment-methods .payment-group .payment-method #drpay-creditcard-form .checkout").css("display","block");		
+		jQuery('.step-content').css('background','rgba(0,0,0,0)');
+	}	
+</script>

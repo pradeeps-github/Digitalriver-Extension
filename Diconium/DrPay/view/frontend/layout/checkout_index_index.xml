@@ -1,0 +1,65 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="1column" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <script src="Diconium_DrPay::js/view/privacy/terms.js"/>
+    </head>
+    <body>
+        <referenceContainer name="content">
+            <block ifconfig="payment/drpay_creditcard/active" class="Magento\Framework\View\Element\Template" name="dr_creditcard_form_top" before="checkout.root" cacheable="false" template="Diconium_DrPay::payment/form-top-creditcard.phtml"/>
+            <block ifconfig="payment/drpay_paypal/active" class="Magento\Framework\View\Element\Template" name="dr_paypal_form_top" before="checkout.root" cacheable="false" template="Diconium_DrPay::payment/form-top-paypal.phtml"/>
+        </referenceContainer>        
+        <referenceBlock name="checkout.root">
+            <arguments>
+                <argument name="jsLayout" xsi:type="array">
+                    <item name="components" xsi:type="array">
+                        <item name="checkout" xsi:type="array">
+                            <item name="children" xsi:type="array">
+                                <item name="steps" xsi:type="array">
+                                    <item name="children" xsi:type="array">
+                                        <item name="billing-step" xsi:type="array">
+                                            <item name="component" xsi:type="string">uiComponent</item>
+                                            <item name="children" xsi:type="array">
+                                                <item name="payment" xsi:type="array">
+                                                    <item name="children" xsi:type="array">
+                                                        <item name="renders" xsi:type="array">
+                                                            <!-- merge payment method renders here -->
+                                                            <item name="children" xsi:type="array">
+                                                                <item name="drpay_creditcard-payment" xsi:type="array">
+                                                                    <item name="component" xsi:type="string">Diconium_DrPay/js/view/payment/creditcard</item>
+                                                                    <item name="methods" xsi:type="array">
+                                                                        <item name="drpay_creditcard" xsi:type="array">
+                                                                            <item name="isBillingAddressRequired" xsi:type="boolean">true</item>
+                                                                        </item>
+                                                                    </item>
+                                                                </item>
+                                                                <item name="drpay_paypal-payment" xsi:type="array">
+                                                                    <item name="component" xsi:type="string">Diconium_DrPay/js/view/payment/paypal</item>
+                                                                    <item name="methods" xsi:type="array">
+                                                                        <item name="drpay_paypal" xsi:type="array">
+                                                                            <item name="isBillingAddressRequired" xsi:type="boolean">true</item>
+                                                                        </item>
+                                                                    </item>
+                                                                </item>
+                                                            </item>
+                                                        </item>
+                                                    </item>
+                                                </item>
+                                            </item>
+                                        </item>
+                                    </item>
+                                </item>
+                            </item>
+                        </item>
+                    </item>
+                </argument>
+            </arguments>
+        </referenceBlock>
+        <!--Privacy terms and condition links-->
+        <referenceContainer name="content">   
+            <container name="privacy.links" htmlTag="div" htmlClass="privacy-links" after="-"/>
+        </referenceContainer>
+        <referenceContainer name="privacy.links">
+            <block class="Diconium\DrPay\Block\Privacy\Terms" name="terms" after="privacy.links" template="Diconium_DrPay::privacy/terms.phtml"/>
+        </referenceContainer> 
+    </body>
+</page>

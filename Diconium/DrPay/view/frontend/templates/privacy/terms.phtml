@@ -1,0 +1,10 @@
+<?php
+/**
+ *
+ * @category   Diconium
+ * @package    Diconium_DrPay
+ */
+
+$block_id = $block->getPrivacyBlock()->getIdentifier();
+echo  $block->getLayout()->createBlock('Magento\Cms\Block\Block')->setBlockId($block_id)->toHtml();
+

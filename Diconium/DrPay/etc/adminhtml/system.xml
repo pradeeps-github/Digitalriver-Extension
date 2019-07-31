@@ -1,0 +1,54 @@
+<?xml version="1.0" ?>
+<!--
+/**
+ *
+ * @category   Diconium
+ * @package    Diconium_DrPay
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <section id="payment">
+            <group id="drpay_creditcard" translate="label" type="text" sortOrder="55" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>DigitalRiver CreditCard Configuration</label>
+                <comment>Credit Card Payment Method implemented with DigitalRiver.js</comment>
+                <field id="active" translate="label" type="select" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="1">
+                    <label>Enable CreditCard Payment</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="url" translate="label" type="text" sortOrder="2" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>JS URL</label>
+                </field>
+                <field id="public_key" translate="label" type="text" sortOrder="3" showInStore="1" showInWebsite="1" showInDefault="1">
+                    <label>Public Key</label>
+                </field>
+                <field id="instructions" translate="label" type="textarea" sortOrder="4" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Instructions</label>
+                </field>
+                <field id="sort_order" translate="label" type="text" sortOrder="5" showInStore="1" showInWebsite="1" showInDefault="1">
+                    <label>Sort Order</label>
+                </field>
+            </group>
+            <group id="drpay_paypal" translate="label" type="text" sortOrder="56" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>DigitalRiver PayPal Configuration</label>
+                <comment>PayPal Payment Method implemented with DigitalRiver.js</comment>
+                <field id="active" translate="label" type="select" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="1">
+                    <label>Enable PayPal Payment</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="url" translate="label" type="text" sortOrder="2" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                	<label>JS URL</label>
+                </field>
+                <field id="public_key" translate="label" type="text" sortOrder="3" showInStore="1" showInWebsite="1" showInDefault="1">
+                    <label>Public Key</label>
+                </field> 
+                <field id="instructions" translate="label" type="textarea" sortOrder="4" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Instructions</label>
+                </field>
+                <field id="sort_order" translate="label" type="text" sortOrder="5" showInStore="1" showInWebsite="1" showInDefault="1">
+                	<label>Sort Order</label>
+                </field>
+            </group>            
+        </section>
+    </system>
+</config>

@@ -1,0 +1,101 @@
+<!--
+/**
+ * Copyright © 2013-2017 Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<div class="payment-method" data-bind="css: {'_active': (getCode() == isChecked())},attr: {'id': getCode()+'-content'}">
+    <div class="payment-method-title field choice">
+        <label class="control control--radio">
+        <input type="radio"
+               name="payment[method]"
+               class="radio"
+               data-bind="attr: {'id': getCode()}, value: getCode(), checked: isChecked, click: selectPaymentMethod, visible: isRadioButtonVisible()" afterRender="radioInit()"/>
+        <label data-bind="attr: {'for': getCode()}" class="label"><span data-bind="text: getTitle()"></span></label>
+        <div class="control__indicator"></div>
+    </label>    
+    </div>
+    <!--<a href="javascript:void(0);" class="details">(Details)</a>-->
+    <div class="payment-method-content">
+    <div id="payment-data"></div>
+        <div class="payment-logos">
+            <div class="american-express"></div>
+            <div class="discover"></div>
+            <div class="diners-club"></div>
+            <div class="jcb"></div>
+            <div class="master-card"></div>
+            <div class="visa"></div>
+        </div>
+		<div class="payment-method-instruction">
+			<span data-bind="text:getInstructions()"></span>
+		</div>          
+       <form id="drpay-creditcard-form" afterRender="drCreditCardLoader()">
+            <div class="row payment-form-inner">
+                <div class="form-field">
+                    <div id="card-number" class="field"></div>
+                </div>
+                <div class="form-field">
+                    <label for="card-expiration">Expiration Date:</label>
+                    <div id="card-expiration" class="field"></div>
+                </div>
+                <div class="form-field">
+                    <div id="card-security-code" class="field"></div>
+                </div>
+         
+                <div id="errors"></div>
+               <div class="mb-3 text-center">
+                  <span id="message" class="message"></span>
+               </div>            
+            </div>
+   <!--      <div class="actions-toolbar">
+            <div class="primary">            
+               <button class="btn btn-primary btn-lg btn-block action primary checkout" type="submit">Payment Information</button>
+           </div>
+       </div> -->
+        <div class="actions-toolbar">
+            <div class="primary">
+                <button class="action primary checkout"
+                        type="submit"
+                        data-bind="
+                        attr: {title: $t('Payment Information')},
+                        enable: (getCode() == isChecked()),
+                        css: {disabled: !isPlaceOrderActionAllowed()}
+                        "
+                        disabled>
+                    <span data-bind="i18n: 'Payment Information'"></span>
+                </button>
+            </div>
+        </div>       
+
+        </form>        
+        <!-- ko foreach: getRegion('messages') -->
+        <!-- ko template: getTemplate() --><!-- /ko -->
+        <!--/ko-->
+        <div class="payment-method-billing-address">
+            <!-- ko foreach: $parent.getRegion(getBillingAddressFormName()) -->
+            <!-- ko template: getTemplate() --><!-- /ko -->
+            <!--/ko-->
+        </div>
+        <div class="checkout-agreements-block">
+            <!-- ko foreach: $parent.getRegion('before-place-order') -->
+                <!-- ko template: getTemplate() --><!-- /ko -->
+            <!--/ko-->
+        </div>
+        <div class="actions-toolbar">
+            <div class="primary">
+                <button class="action primary checkout placeorder" style="display:none"
+                        type="submit"
+                        data-bind="
+                        click: placeOrder,
+                        attr: {title: $t('Place Your Order')},
+                        enable: (getCode() == isChecked()),
+                        css: {disabled: !isPlaceOrderActionAllowed()}
+                        "
+                        disabled>
+                    <span data-bind="i18n: 'Place Your Order'"></span>
+                </button>
+            </div>
+        </div>
+
+    </div>
+</div>

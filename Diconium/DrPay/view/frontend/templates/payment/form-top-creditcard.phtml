@@ -1,0 +1,186 @@
+<script type="text/javascript">
+	function drCreditCardLoader(){
+		var jsUrl = window.checkoutConfig.payment.drpay_creditcard.js_url;
+		var publicKey = window.checkoutConfig.payment.drpay_creditcard.public_key;
+		if(jsUrl && publicKey){ //If url and key set in admin
+			var script = document.createElement("script"); //Dynamically append the drcreditcardjs
+			script.onload = function () {
+		    //After append js set Your API Key and Start DigitalRiver.js
+		    var drcreditcardjs = new DigitalRiver(publicKey);
+
+			var options = getDrCreditCardOptions();
+			//Create your Card Number element
+			var cardNumber = drcreditcardjs.createElement('cardnumber', options);
+			//Place the Card Number element within the container created above.
+			cardNumber.mount('card-number');      
+			//Create your Card Expiration element
+			var cardExpiration = drcreditcardjs.createElement('cardexpiration', options);
+			//Place the Card Expiration element within the container created above.
+			cardExpiration.mount('card-expiration');
+			//Create your Card Security Code element
+			var cardSecurityCode = drcreditcardjs.createElement('cardcvv', options);
+			//Place the Card Security Code element within the container created above.
+			cardSecurityCode.mount('card-security-code');    
+			// Create a token or display an error when the form is submitted.
+			var paymentForm = document.getElementById('drpay-creditcard-form');
+				paymentForm.addEventListener('submit', function(event) {
+				event.preventDefault();
+				var payload = {};
+				//After submit the creditcard details create the cart
+	            jQuery.ajax({
+					type: 'POST',
+					url: BASE_URL + 'drpay/creditcard/savedrquote',
+					showLoader: true, //use for display loader 
+					success: function (response) {
+						if (response.success) {
+							if(response.content.cart){
+								//once cart created get the payment source id
+								getCreditCardSourceId(drcreditcardjs, cardNumber);
+							}
+						}else{
+							//Show Error Message
+							console.log(response.content.error);
+						}
+					},
+				});	
+			});			    
+		};
+		script.src = jsUrl;
+		document.getElementsByTagName('head')[0].appendChild(script);
+		}
+	}
+	function getCreditCardSourceId(drcreditcardjs, cardNumber){
+		require([
+			'Magento_Checkout/js/model/quote'
+		],
+		function (quote){
+			if(quote.getQuoteId()){
+				var billingAddress = quote.billingAddress();
+				var totals = quote.totals();
+				if(billingAddress && totals){
+					var grand_total = 0;
+					if (totals && totals.total_segments) {
+						totals.total_segments.forEach(function (item) {
+							if (item.code == 'grand_total') {
+								grand_total = parseFloat(item.value);
+							}
+						});
+					}
+					var payload = {
+					  "type": "creditCard",
+					  "owner": {
+							firstName: window.customerData.firstname,
+							lastName: window.customerData.lastname,
+							email: window.customerData.email,
+							address: {
+								line1: billingAddress.street[0],
+								line2: billingAddress.street[1],
+								city: billingAddress.city,
+								state: (billingAddress.regionCode)?billingAddress.regionCode:"na",
+								postalCode: billingAddress.postcode,
+								country: billingAddress.countryId
+							}
+						},
+					   "amount": grand_total,
+					   "currency": totals.quote_currency_code
+					}
+				}
+				drcreditcardjs.createSource(cardNumber,payload).then(function(result) {
+					if(result.error) {
+						//Something went wrong, display the error message to the customer
+						document.getElementById('message').innerHTML ="";
+						document.getElementById('message').innerHTML =result.error.message;
+					} else {
+						//Success!  You can now send the token to your server for use in downstream API calls.
+						 var source = result.source;
+						 var creditCardDetails = source.creditCard;
+						 if(creditCardDetails){
+							var title = "<div class='title'>"+jQuery(".payment-methods .payment-group .payment-method._active .payment-method-title .label span").html()+"</div>";
+							var cartinfo = "<div class='card-info'>"+ creditCardDetails.brand + " ending in " + creditCardDetails.lastFourDigits+"</div>";
+							var editlink = "<a class='payment-edit' href = 'javascript:void(0)' id='payment-edit' onclick='displayDrForm()'>Edit</a>";
+							jQuery("#payment-data").html(title+cartinfo+editlink);						
+							jQuery("#payment-data").css("display","block");
+							jQuery("#payment-data").addClass('payment-active');
+							jQuery(".payment-methods .payment-group .step-title").css("display","none");
+							jQuery(".payment-methods .payment-group .payment-method .payment-method-title").css("display","none");
+							jQuery(".payment-methods .payment-group .payment-method .details").css("display","none");
+							jQuery(".payment-methods .payment-group .payment-method .payment-logos").css("display","none");
+							jQuery(".payment-methods .payment-group .payment-method .payment-icon").css("display","none");
+							jQuery(".payment-methods .payment-group .payment-method .payment-method-instruction").css("display","none");
+							jQuery("#drpay-creditcard-form").css("display","none");
+							jQuery(".payment-methods .payment-group .payment-method .checkout").css("display","block");
+							jQuery('.checkout-tabs .nav-pills li').removeClass('active');
+							jQuery('.checkout-tabs .nav-pills li:nth-child(2)').addClass('active');
+							jQuery('.step-content').css('background','#e6e6e6');
+							
+						 }
+						 if(source.id){
+		 		            jQuery.ajax({
+								type: 'POST',
+								url: BASE_URL + 'drpay/creditcard/savedrsource',
+								data:{"source_id":source.id},
+								showLoader: true, //use for display loader 
+								success: function (response) {
+									if (response.success) {
+									}else{
+										//Show Error Message
+										console.log(response);
+									}
+								},
+							});
+						}
+					}
+				});
+			}
+		});
+	}
+	function getDrCreditCardOptions(){
+	return {
+			classes: {
+				base: "DRElement",
+				complete: "complete",
+				empty: "empty",
+				focus: "focus",
+				invalid: "invalid",
+				webkitAutofill: "autofill"
+	    	},
+	        style: {
+	        	base: {
+	             color: "#555",
+	             fontFamily: "Arial, Helvetica, sans-serif",
+	             fontSize: "16px",
+	             fontSmoothing: "auto",
+	             fontVariant: "normal"
+	             },
+	             empty: {
+	                 color: "#555"
+	             },
+	             complete: {
+	                 color: "#555"
+	             },
+	             invalid: {
+	                 color: "red"
+	             }
+	        }
+		};
+	}	
+	function displayDrForm(){
+		jQuery(".payment-methods .payment-group .step-title").css("display","block");
+		jQuery(".payment-methods .payment-group .payment-method .payment-method-title").css("display","block");
+		jQuery(".payment-methods .payment-group .payment-method .details").css("display","inline-block");
+		jQuery(".payment-methods .payment-group .payment-method .payment-logos").css("display","inline-block");
+		jQuery(".payment-methods .payment-group .payment-method .payment-icon").css("display","inline-block");
+		jQuery("#drpay-creditcard-form").css("display","block");
+		jQuery("#payment-data").css("display","none");
+		jQuery("#payment-data").removeClass('payment-active');
+		jQuery(".payment-methods .payment-group .payment-method .payment-method-instruction").css("display","block");
+		 jQuery(".payment-methods .payment-group .payment-method .payment-method-content .checkout").css("display","block");
+		 jQuery(".payment-methods .payment-group .payment-method .checkout").css("display","block");
+		jQuery('.checkout-tabs .nav-pills li').removeClass('active');
+		jQuery('.checkout-tabs .nav-pills li:nth-child(1)').addClass('active');
+		jQuery('.step-content').css('background','none');
+		jQuery('.payment-method-content').css('margin-bottom','10px');
+		jQuery(".payment-methods .payment-group .payment-method .checkout").css("display","none");
+		jQuery(".payment-methods .payment-group .payment-method #drpay-creditcard-form .checkout").css("display","block");
+	}	
+</script>

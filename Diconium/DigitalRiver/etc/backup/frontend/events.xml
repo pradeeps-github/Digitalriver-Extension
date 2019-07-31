@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
+    <event name="checkout_cart_update_items_after">
+        <observer name="checkout_cart_update_items_after" instance="Diconium\DigitalRiver\Observer\UpdateDrQuote"/>
+    </event>
+    <event name="checkout_cart_apply_coupon_after">
+        <observer name="checkout_cart_apply_coupon_after" instance="Diconium\DigitalRiver\Observer\UpdateDrQuote"/>
+    </event>
+    <event name="sales_quote_remove_item">
+        <observer name="sales_quote_remove_item" instance="Diconium\DigitalRiver\Observer\UpdateDrQuoteAfterRemove"/>
+    </event>
+</config>

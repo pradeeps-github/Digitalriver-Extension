@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<!--
+/**
+ *
+ * @category   Diconium
+ * @package    Diconium_DrPay
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <payment>
+            <drpay_creditcard>
+                <active>0</active>
+                <url>https://js.digitalriver.com/v1/DigitalRiver.js</url>
+                <sort_order>1</sort_order>
+                <model>Diconium\DrPay\Model\CreditCard</model>
+                <order_status>pending_payment</order_status>
+                <allowspecific>0</allowspecific>
+                <sort_order>0</sort_order>
+                <title><![CDATA[Credit Card]]></title>
+                <instructions><![CDATA[Please enter your credit card as a continuous string of numbers without spaces or dashes.The security of your credit card information is important to us. We use Secure Socket Layer (SSL) technology to protect the security of your credit card information.]]></instructions>
+            </drpay_creditcard>
+            <drpay_paypal>
+                <active>0</active>
+                <url>https://js.digitalriver.com/v1/DigitalRiver.js</url>
+                <sort_order>1</sort_order>
+                <model>Diconium\DrPay\Model\PayPal</model>
+                <order_status>pending_payment</order_status>
+                <allowspecific>0</allowspecific>
+                <sort_order>1</sort_order>
+                <title><![CDATA[PayPal]]></title>
+                <instructions><![CDATA[Make a payment from your new or existing PayPal account.]]></instructions>
+            </drpay_paypal>
+        </payment>
+    </default>
+</config>
